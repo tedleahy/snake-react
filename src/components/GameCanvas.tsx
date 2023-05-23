@@ -21,7 +21,7 @@ const { gridSquareSize, snakeColour, fruitColour, gameOverColour, snakeSpeed} = 
 
 interface Snake {
   head: { x: number, y: number },
-  tail: number[],
+  tail: number[][],
   maxTailLength: number,
 }
 
@@ -72,6 +72,19 @@ function drawSnake(ctx: CanvasRenderingContext2D, snake: Snake): void {
   const { head, tail, maxTailLength } = snake
 
   drawSquare(ctx, head.x, head.y, snakeColour)
+
+  snake.tail.push([head.x, head.y])
+  if (tail.length > maxTailLength) {
+    // Take the last square from the tail to remove it
+    const [toRemoveX, toRemoveY] = tail.shift() || []
+
+    ctx.clearRect(
+      toRemoveX * gridSquareSize,
+      toRemoveY * gridSquareSize,
+      gridSquareSize,
+      gridSquareSize,
+    )
+  }
 }
 
 function moveSnake(
