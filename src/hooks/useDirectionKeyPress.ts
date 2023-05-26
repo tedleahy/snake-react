@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import useKeyPress from './useKeyPress'
-import { SnakeDirection } from '../components/GameCanvas'
+import { SnakeDirection } from "./useSnake"
 
 export default function useDirectionKeyPress(callback: (direction: SnakeDirection) => void): void {
   const upPressed = useKeyPress('ArrowUp')
