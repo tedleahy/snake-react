@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import useDirectionKeyPress from "../hooks/useDirectionKeyPress";
 import { useInterval } from "usehooks-ts";
+import { settings } from "../lib/gameState";
+import useFruit from "../lib/fruit";
 
 export enum SnakeDirection {
   Left  = 'left',
@@ -9,17 +11,9 @@ export enum SnakeDirection {
   Down  = 'down',
 }
 
-const globalSettings = {
-  gridSquareSize: 20,
-  snakeColour: '#7CB9E8',
-  fruitColour: '#AA0000',
-  gameOverColour: '#00853E',
-  snakeSpeed: 100,
-}
+const { gridSquareSize, snakeColour, fruitColour, gameOverColour, snakeSpeed} = settings
 
-const { gridSquareSize, snakeColour, fruitColour, gameOverColour, snakeSpeed} = globalSettings
-
-interface Snake {
+export interface Snake {
   head: { x: number, y: number },
   tail: number[][],
   maxTailLength: number,
@@ -35,6 +29,8 @@ export default function GameCanvas() {
     maxTailLength: 3
   })
   const snakeDirection = useRef<SnakeDirection | null>(null)
+  
+  useFruit(ctx, snake)
 
   useDirectionKeyPress((newDirection) => {
     snakeDirection.current = newDirection
@@ -57,7 +53,7 @@ export default function GameCanvas() {
   )
 }
 
-function drawSquare(
+export function drawSquare(
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
