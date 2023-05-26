@@ -87,6 +87,24 @@ function drawSnake(ctx: CanvasRenderingContext2D, snake: Snake): void {
   }
 }
 
+function handleReachBoundary(ctx: CanvasRenderingContext2D, { head }: Snake) {
+  const { canvas } = ctx
+  const reachedLeftEdge   = head.x < 0
+  const reachedTopEdge    = head.y < 0
+  const reachedRightEdge  = (head.x * gridSquareSize) > (canvas.width - 1)
+  const reachedBottomEdge = (head.y * gridSquareSize) > (canvas.height - 1)
+
+  if (reachedLeftEdge) {
+    head.x = canvas.width / gridSquareSize
+  } else if (reachedTopEdge) {
+    head.y = canvas.height / gridSquareSize
+  } else if (reachedRightEdge) {
+    head.x = 0
+  } else if (reachedBottomEdge) {
+    head.y = 0
+  }
+}
+
 function moveSnake(
   ctx: CanvasRenderingContext2D,
   snake: Snake,
@@ -109,6 +127,7 @@ function moveSnake(
       break
   }
 
+  handleReachBoundary(ctx, snake)
   drawSnake(ctx, newSnake)
   return newSnake
 }
