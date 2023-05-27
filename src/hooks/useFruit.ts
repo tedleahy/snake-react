@@ -22,6 +22,7 @@ function getRandomBoardSquare(canvas: HTMLCanvasElement | undefined): CanvasLoca
 export default function useFruit(
   ctx: CanvasRenderingContext2D | null | undefined,
   snake: Snake,
+  setSnake: React.Dispatch<React.SetStateAction<Snake>>,
 ) {
   const [fruitLocation, setFruitLocation] = useState<CanvasLocation>({ x: 0, y: 0})
   
@@ -44,6 +45,7 @@ export default function useFruit(
   // When snake hits fruit
   useEffect(() => {
     if (ctx && snakeHasHitFruit) {
+      setSnake({ ...snake, maxTailLength: snake.maxTailLength + 1 })
       drawRandomFruit()
     }
   }, [ctx, snakeHasHitFruit])

@@ -20,13 +20,15 @@ export enum SnakeDirection {
   Down  = 'down',
 }
 
-export default function useSnake(ctx: CanvasRenderingContext2D | null | undefined) {
+export default function useSnake(
+  ctx: CanvasRenderingContext2D | null | undefined
+): [Snake, React.Dispatch<React.SetStateAction<Snake>>] {
+  const snakeDirection = useRef<SnakeDirection | null>(null)
   const [snake, setSnake] = useState<Snake>({
     head: { x: 5, y: 5 },
     tail: [],
     maxTailLength: 3
   })
-  const snakeDirection = useRef<SnakeDirection | null>(null)
 
   useDirectionKeyPress((newDirection) => {
     snakeDirection.current = newDirection
@@ -39,7 +41,7 @@ export default function useSnake(ctx: CanvasRenderingContext2D | null | undefine
     }
   }, 100)
 
-  return snake
+  return [snake, setSnake]
 }
 
 function moveSnake(

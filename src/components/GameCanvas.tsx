@@ -10,8 +10,8 @@ export default function GameCanvas() {
   const canvas = canvasRef?.current
   const ctx = canvas?.getContext('2d')
   // TODO store snake in context/redux or something
-  const snake = useSnake(ctx)
-  useFruit(ctx, snake)
+  const [snake, setSnake] = useSnake(ctx)
+  useFruit(ctx, snake, setSnake)
 
   return (
     <canvas
