@@ -121,10 +121,12 @@ export default function useSnake(
   }
 
   useDirectionKeyPress((newDirection) => {
-    snakeDirection.current = newDirection
-    if (ctx && snake.stoppedMoving) {
-      setSnake({ ...snake, stoppedMoving: false })
-      clearBoard(ctx)
+    if (!isGoingBackwards(snakeDirection.current, newDirection)) {
+      snakeDirection.current = newDirection
+      if (ctx && snake.stoppedMoving) {
+        setSnake({ ...snake, stoppedMoving: false })
+        clearBoard(ctx)
+      }
     }
   })
 
@@ -135,4 +137,27 @@ export default function useSnake(
   }, 100)
 
   return [snake, setSnake]
+}
+
+/*
+If the snake goes back on itself, it hits its tail, triggering a game over.
+We need to detect when this is happening so that we can prevent it
+*/
+function isGoingBackwards(currentDirection: SnakeDirection | null, newDirection: SnakeDirection): boolean {
+  if (!currentDirection) return false
+
+  const oppositeDirections = [
+    [SnakeDirection.Left, SnakeDirection.Right],
+    [SnakeDirection.Up, SnakeDirection.Down],
+  ]
+
+  let isGoingBackwards = false
+  for (const directionPair of oppositeDirections) {
+    if (directionPair.includes(currentDirection) && directionPair.includes(newDirection)) {
+      isGoingBackwards = true
+    }
+    if (isGoingBackwards) break
+  }
+
+  return isGoingBackwards
 }
