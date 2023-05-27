@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { settings } from "../lib/gameState";
 import { Snake } from "./useSnake";
 import { CanvasLocation } from "../types/general";
-import { drawRandomSquare } from "./useCanvas";
+import { drawSquare, getRandomBoardSquare } from "./useCanvas";
 
 const { fruitColour  } = settings
 
@@ -16,7 +16,19 @@ export default function useFruit(
     snake.head.y === fruitLocation.y
 
   const drawNewFruit = () => {
-    if (ctx) setFruitLocation(drawRandomSquare(ctx, fruitColour))
+    if (ctx) {
+      const fullSnake = [[snake.head.x, snake.head.y], ...snake.tail]
+
+      // If the fruit is going to be drawn on top of the snake,
+      // get a random location again until it's not
+      let newLocation
+      while (!newLocation || fullSnake.includes([newLocation.x, newLocation.y])) {
+        newLocation = getRandomBoardSquare(ctx.canvas)
+      }
+      setFruitLocation(newLocation)
+
+      drawSquare(ctx, newLocation.x, newLocation.y, fruitColour)
+    }
   }
 
   // When snake starts moving

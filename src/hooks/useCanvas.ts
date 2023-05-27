@@ -32,7 +32,7 @@ export function drawRandomSquare(ctx: CanvasRenderingContext2D, colour: string):
   return newLocation
 }
 
-function getRandomBoardSquare(canvas: HTMLCanvasElement): CanvasLocation {
+export function getRandomBoardSquare(canvas: HTMLCanvasElement): CanvasLocation {
   return {
     x: Math.floor(randomBetween(0, canvas.width) / gridSquareSize),
     y: Math.floor(randomBetween(0, canvas.height) / gridSquareSize),
