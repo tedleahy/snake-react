@@ -4,4 +4,5 @@ export const settings = {
   fruitColour: '#AA0000',
   gameOverColour: '#00853E',
   snakeSpeed: 100,
+  defaultSnakeLength: 20,
 }
