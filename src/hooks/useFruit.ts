@@ -44,8 +44,8 @@ export default function useFruit(
     if (ctx && snakeHasHitFruit) {
       setSnake({
         ...snake,
-        maxTailLength: snake.maxTailLength + 1,
-        redrawSpeed: snake.redrawSpeed / 1.2,
+        maxTailLength: snake.maxTailLength + 2,
+        redrawSpeed: snake.redrawSpeed - 5,
       })
       placeFruit()
     }

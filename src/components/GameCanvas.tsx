@@ -10,8 +10,8 @@ export default function GameCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      width="800"
-      height="600"
+      width="1000"
+      height="800"
       style={{ border: '1px solid black' }}
     />
   )
