@@ -42,7 +42,11 @@ export default function useFruit(
   // When snake hits fruit
   useEffect(() => {
     if (ctx && snakeHasHitFruit) {
-      setSnake({ ...snake, maxTailLength: snake.maxTailLength + 1 })
+      setSnake({
+        ...snake,
+        maxTailLength: snake.maxTailLength + 1,
+        redrawSpeed: snake.redrawSpeed / 1.2,
+      })
       placeFruit()
     }
   }, [ctx, snakeHasHitFruit])

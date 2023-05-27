@@ -6,13 +6,19 @@ import useDirectionKeyPress from "./useDirectionKeyPress";
 import { CanvasLocation } from "../types/general";
 import { clearBoard, drawGameOver } from "./useCanvas";
 
-const { snakeColour, defaultSnakeLength, gridSquareSize } = settings
+const {
+  snakeColour,
+  defaultSnakeLength,
+  defaultSnakeRedrawSpeed,
+  gridSquareSize
+} = settings
 
 export interface Snake {
   head: CanvasLocation,
   tail: number[][],
   maxTailLength: number,
   stoppedMoving: boolean,
+  redrawSpeed: number,
 }
 
 export enum SnakeDirection {
@@ -31,6 +37,7 @@ export default function useSnake(
     tail: [],
     maxTailLength: defaultSnakeLength,
     stoppedMoving: true,
+    redrawSpeed: defaultSnakeRedrawSpeed,
   })
 
   function drawSnake(): void {
@@ -134,7 +141,7 @@ export default function useSnake(
     if (ctx && !snake.stoppedMoving) {
       moveSnake()
     }
-  }, 100)
+  }, snake.redrawSpeed)
 
   return [snake, setSnake]
 }
