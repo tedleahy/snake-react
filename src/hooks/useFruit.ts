@@ -15,32 +15,35 @@ export default function useFruit(
   const snakeHasHitFruit = snake.head.x === fruitLocation.x &&
     snake.head.y === fruitLocation.y
 
-  const drawNewFruit = () => {
+  // place fruit in a random place on the board, except for spaces occupied by the snake
+  const placeFruit = () => {
     if (ctx) {
       const fullSnake = [[snake.head.x, snake.head.y], ...snake.tail]
-
-      // If the fruit is going to be drawn on top of the snake,
-      // get a random location again until it's not
+      // Ensure that the fruit isn't placed on top of the snake
       let newLocation
       while (!newLocation || fullSnake.includes([newLocation.x, newLocation.y])) {
         newLocation = getRandomBoardSquare(ctx.canvas)
       }
-      setFruitLocation(newLocation)
 
-      drawSquare(ctx, newLocation.x, newLocation.y, fruitColour)
+      setFruitLocation(newLocation)
     }
   }
 
-  // When snake starts moving
+  // When fruit location changes
   useEffect(() => {
-    if (ctx && !snake.stoppedMoving) drawNewFruit()
+    if (ctx) drawSquare(ctx, fruitLocation.x, fruitLocation.y, fruitColour)
+  }, [fruitLocation])
+
+  // When snake starts moving (at start or after gameover)
+  useEffect(() => {
+    if (ctx && !snake.stoppedMoving) placeFruit()
   }, [snake.stoppedMoving])
 
   // When snake hits fruit
   useEffect(() => {
     if (ctx && snakeHasHitFruit) {
       setSnake({ ...snake, maxTailLength: snake.maxTailLength + 1 })
-      drawNewFruit()
+      placeFruit()
     }
   }, [ctx, snakeHasHitFruit])
 }
