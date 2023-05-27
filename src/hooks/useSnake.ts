@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { drawSquare } from "../components/GameCanvas";
+import { drawSquare } from "./useCanvas";
 import { useInterval } from "usehooks-ts";
 import { settings } from "../lib/gameState";
 import useDirectionKeyPress from "./useDirectionKeyPress";

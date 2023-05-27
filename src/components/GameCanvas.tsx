@@ -20,13 +20,3 @@ export default function GameCanvas() {
     />
   )
 }
-
-export function drawSquare(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  colour: string,
-): void {
-  ctx.fillStyle = colour
-  ctx.fillRect(x * gridSquareSize, y * gridSquareSize, gridSquareSize, gridSquareSize)
-}
