@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { drawSquare } from "./useCanvas";
+import { useEffect, useState } from "react";
+import { drawSquare, getRandomBoardSquare } from "./useCanvas";
 import { useInterval } from "usehooks-ts";
 import { settings } from "../lib/gameState";
 import useDirectionKeyPress from "./useDirectionKeyPress";
@@ -13,14 +13,6 @@ const {
   gridSquareSize
 } = settings
 
-export interface Snake {
-  head: CanvasLocation,
-  tail: number[][],
-  maxTailLength: number,
-  stoppedMoving: boolean,
-  redrawSpeed: number,
-}
-
 export enum SnakeDirection {
   Left  = 'left',
   Right = 'right',
@@ -28,20 +20,30 @@ export enum SnakeDirection {
   Down  = 'down',
 }
 
+export interface Snake {
+  head: CanvasLocation,
+  tail: number[][],
+  maxTailLength: number,
+  stoppedMoving: boolean,
+  redrawSpeed: number,
+  direction: SnakeDirection | null,
+}
+
 export default function useSnake(
   ctx: CanvasRenderingContext2D | null | undefined
 ): [Snake, React.Dispatch<React.SetStateAction<Snake>>] {
-  const snakeDirection = useRef<SnakeDirection | null>(null)
-  const [snake, setSnake] = useState<Snake>({
-    head: { x: 5, y: 5 },
+  const initialSnake = {
+    head: ctx ? getRandomBoardSquare(ctx?.canvas) : { x: 0, y: 0 },
     tail: [],
     maxTailLength: defaultSnakeLength,
     stoppedMoving: true,
     redrawSpeed: defaultSnakeRedrawSpeed,
-  })
+    direction: null,
+  }
+  const [snake, setSnake] = useState<Snake>({ ...initialSnake })
 
   function drawSnake(): void {
-    if (!ctx) return
+    if (!ctx || snake.stoppedMoving) return
     const { head, tail, maxTailLength } = snake
   
     drawSquare(ctx, head.x, head.y, snakeColour)
@@ -63,7 +65,7 @@ export default function useSnake(
   function moveSnake(): void {
     const newSnake = { ...snake }
 
-    switch(snakeDirection.current) {
+    switch(snake.direction) {
       case SnakeDirection.Left:
         newSnake.head.x--
         break
@@ -117,25 +119,27 @@ export default function useSnake(
     }
 
     if (hasHitTail) {
-      setSnake({
-        ...snake,
-        stoppedMoving: true,
-        tail: [],
-        maxTailLength: defaultSnakeLength,
-      })
       drawGameOver(ctx)
+      setSnake({ ...initialSnake })
     }
   }
 
   useDirectionKeyPress((newDirection) => {
-    if (!isGoingBackwards(snakeDirection.current, newDirection)) {
-      snakeDirection.current = newDirection
-      if (ctx && snake.stoppedMoving) {
-        setSnake({ ...snake, stoppedMoving: false })
-        clearBoard(ctx)
-      }
+    const newSnake = { ...snake }
+
+    if (!isGoingBackwards(snake.direction, newDirection)) {
+      newSnake.direction = newDirection
     }
+
+    if (ctx && snake.stoppedMoving) {
+      newSnake.stoppedMoving = false
+      clearBoard(ctx)
+    }
+
+    setSnake(newSnake)
   })
+
+  useEffect(() => drawSnake(), [snake.head])
 
   useInterval(() => {
     if (ctx && !snake.stoppedMoving) {
