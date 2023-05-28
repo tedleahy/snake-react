@@ -45,7 +45,7 @@ function randomBetween(min: number, max: number) {
 
 export function drawGameOver(ctx: CanvasRenderingContext2D) {
   clearBoard(ctx)
-  ctx.font = '30px Arial'
+  ctx.font = '60px Arial'
   ctx.fillStyle = gameOverColour
   ctx.textAlign = 'center'
 
